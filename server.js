@@ -1,10 +1,12 @@
 const express = require('express');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
 require('dotenv').config();
 
+const { pool } = require('./db/db');
 const authRoutes = require('./routes/auth');
 const lessonRoutes = require('./routes/lessons');
 const exerciseRoutes = require('./routes/exercises');
@@ -37,8 +39,13 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Session middleware
+// Session middleware with PostgreSQL store
 app.use(session({
+  store: new pgSession({
+    pool: pool,
+    tableName: 'session',
+    createTableIfMissing: true
+  }),
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
