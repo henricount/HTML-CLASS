@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Editor - HTML Journalism Course</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/editor/editor.main.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #1e1e1e;
+            color: #fff;
+        }
+
+        /* Top bar */
+        .top-bar {
+            background: #2d2d2d;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3e3e3e;
+        }
+
+        .exercise-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .btn-save {
+            background: #0e639c;
+            color: white;
+        }
+
+        .btn-submit {
+            background: #0e7a0d;
+            color: white;
+        }
+
+        .btn-back {
+            background: #5a5a5a;
+            color: white;
+        }
+
+        /* Main content area */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Instructions sidebar */
+        .instructions-panel {
+            width: 300px;
+            background: #252526;
+            border-right: 1px solid #3e3e3e;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .instructions-panel h2 {
+            margin-bottom: 15px;
+            color: #4ec9b0;
+        }
+
+        .instructions-panel p, .instructions-panel li {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            color: #cccccc;
+        }
+
+        .requirements {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        .requirements h3 {
+            margin-bottom: 10px;
+            color: #dcdcaa;
+        }
+
+        .requirements ul {
+            margin-left: 20px;
+        }
+
+        /* Editor and preview split */
+        .editor-preview-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Resize handle */
+        .resize-handle {
+            height: 4px;
+            background: #3e3e3e;
+            cursor: ns-resize;
+            position: relative;
+        }
+
+        .resize-handle:hover {
+            background: #007acc;
+        }
+
+        /* Editor */
+        .editor-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #editor {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Preview */
+        .preview-container {
+            flex: 1;
+            background: white;
+            position: relative;
+        }
+
+        .preview-header {
+            background: #2d2d2d;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3e3e3e;
+        }
+
+        .preview-header h3 {
+            font-size: 14px;
+            color: #cccccc;
+        }
+
+        .refresh-btn {
+            padding: 4px 12px;
+            background: #0e639c;
+            color: white;
+            font-size: 12px;
+        }
+
+        #preview-frame {
+            width: 100%;
+            height: calc(100% - 40px);
+            border: none;
+            background: white;
+        }
+
+        /* Grading results modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #2d2d2d;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #4ec9b0;
+        }
+
+        .close-modal {
+            background: #5a5a5a;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 30px;
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .score-number.perfect {
+            color: #4ec9b0;
+        }
+
+        .score-number.good {
+            color: #dcdcaa;
+        }
+
+        .score-number.needs-work {
+            color: #ce9178;
+        }
+
+        .test-results {
+            margin-top: 20px;
+        }
+
+        .test-result {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .test-result.passed {
+            background: rgba(78, 201, 176, 0.2);
+            border-left: 4px solid #4ec9b0;
+        }
+
+        .test-result.failed {
+            background: rgba(244, 71, 71, 0.2);
+            border-left: 4px solid #f44747;
+        }
+
+        .test-icon {
+            font-size: 20px;
+        }
+
+        .feedback-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1e1e1e;
+            border-radius: 4px;
+        }
+
+        .feedback-section h3 {
+            margin-bottom: 10px;
+            color: #dcdcaa;
+        }
+
+        .auto-save-indicator {
+            font-size: 12px;
+            color: #858585;
+        }
+
+        .auto-save-indicator.saving {
+            color: #dcdcaa;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid #3e3e3e;
+            border-top: 3px solid #007acc;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .instructions-panel {
+                width: 100%;
+                max-height: 200px;
+            }
+
+            .main-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="exercise-title" id="exercise-title">Loading...</div>
+        <div class="top-bar-actions">
+            <span class="auto-save-indicator" id="save-indicator">Auto-save enabled</span>
+            <button class="btn-back" onclick="window.location.href='/dashboard.html'">← Back to Dashboard</button>
+            <button class="btn-save" onclick="saveCode()">💾 Save</button>
+            <button class="btn-submit" onclick="submitCode()">✓ Submit & Grade</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="instructions-panel" id="instructions">
+            <h2>Instructions</h2>
+            <p id="description">Loading exercise...</p>
+
+            <div class="requirements" id="requirements-section" style="display: none;">
+                <h3>Requirements</h3>
+                <ul id="requirements-list"></ul>
+            </div>
+
+            <div style="margin-top: 20px; padding: 15px; background: #1e1e1e; border-radius: 4px;">
+                <h3 style="color: #dcdcaa; margin-bottom: 10px;">Tips</h3>
+                <ul style="margin-left: 20px; color: #cccccc;">
+                    <li>Code is auto-saved every 30 seconds</li>
+                    <li>Preview updates in real-time as you type</li>
+                    <li>Click "Submit & Grade" to check your work</li>
+                    <li>You can resubmit as many times as needed</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="editor-preview-container">
+            <div class="editor-container">
+                <div id="editor"></div>
+            </div>
+
+            <div class="resize-handle" id="resize-handle"></div>
+
+            <div class="preview-container">
+                <div class="preview-header">
+                    <h3>Live Preview</h3>
+                    <button class="refresh-btn" onclick="refreshPreview()">🔄 Refresh</button>
+                </div>
+                <iframe id="preview-frame" sandbox="allow-same-origin"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grading Results Modal -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Grading Results</h2>
+                <button class="close-modal" onclick="closeModal()">Close</button>
+            </div>
+
+            <div class="score-display">
+                <div class="score-number" id="score-number">0/0</div>
+                <div id="score-message">Grading...</div>
+            </div>
+
+            <div class="test-results" id="test-results"></div>
+
+            <div class="feedback-section" id="feedback-section"></div>
+        </div>
+    </div>
+
+    <!-- Monaco Editor -->
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+    <script>
+        let editor;
+        let currentExerciseId;
+        let autoSaveInterval;
+        let lastSaveTime = Date.now();
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Get exercise ID from URL
+            const params = new URLSearchParams(window.location.search);
+            currentExerciseId = params.get('exercise');
+
+            if (!currentExerciseId) {
+                alert('No exercise specified');
+                window.location.href = '/dashboard.html';
+                return;
+            }
+
+            // Initialize Monaco Editor
+            require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+            require(['vs/editor/editor.main'], function () {
+                editor = monaco.editor.create(document.getElementById('editor'), {
+                    value: '<!-- Loading... -->',
+                    language: 'html',
+                    theme: 'vs-dark',
+                    automaticLayout: true,
+                    fontSize: 14,
+                    minimap: { enabled: true },
+                    wordWrap: 'on'
+                });
+
+                // Auto-update preview
+                editor.onDidChangeModelContent(() => {
+                    updatePreview();
+                });
+
+                // Load exercise
+                loadExercise();
+            });
+
+            // Auto-save every 30 seconds
+            autoSaveInterval = setInterval(() => {
+                if (Date.now() - lastSaveTime > 30000) {
+                    saveCode(true);
+                }
+            }, 30000);
+
+            // Setup resize handle
+            setupResizeHandle();
+        });
+
+        // Load exercise data
+        async function loadExercise() {
+            try {
+                const response = await fetch(`/api/exercises/${currentExerciseId}`);
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.error);
+
+                // Update UI
+                document.getElementById('exercise-title').textContent = data.exercise.title;
+                document.getElementById('description').innerHTML = data.exercise.instructions;
+
+                // Set editor content
+                editor.setValue(data.savedCode || data.exercise.starter_code || '<!DOCTYPE html>\n<html>\n<head>\n    <title>My Page</title>\n</head>\n<body>\n    \n</body>\n</html>');
+
+                updatePreview();
+
+            } catch (error) {
+                console.error('Load exercise error:', error);
+                alert('Failed to load exercise');
+            }
+        }
+
+        // Update live preview
+        function updatePreview() {
+            const code = editor.getValue();
+            const preview = document.getElementById('preview-frame');
+            const blob = new Blob([code], { type: 'text/html' });
+            preview.src = URL.createObjectURL(blob);
+        }
+
+        function refreshPreview() {
+            updatePreview();
+        }
+
+        // Save code
+        async function saveCode(isAutoSave = false) {
+            const code = editor.getValue();
+            const indicator = document.getElementById('save-indicator');
+
+            if (isAutoSave) {
+                indicator.textContent = 'Saving...';
+                indicator.classList.add('saving');
+            }
+
+            try {
+                const response = await fetch(`/api/exercises/${currentExerciseId}/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code })
+                });
+
+                if (!response.ok) throw new Error('Save failed');
+
+                lastSaveTime = Date.now();
+
+                if (isAutoSave) {
+                    indicator.textContent = 'Auto-saved';
+                    setTimeout(() => {
+                        indicator.textContent = 'Auto-save enabled';
+                        indicator.classList.remove('saving');
+                    }, 2000);
+                } else {
+                    alert('Code saved successfully!');
+                }
+
+            } catch (error) {
+                console.error('Save error:', error);
+                if (!isAutoSave) alert('Failed to save code');
+            }
+        }
+
+        // Submit and grade
+        async function submitCode() {
+            const code = editor.getValue();
+
+            // Show loading
+            const modal = document.getElementById('results-modal');
+            modal.classList.add('active');
+            document.getElementById('score-message').textContent = 'Grading your submission...';
+            document.getElementById('test-results').innerHTML = '<div class="spinner"></div>';
+
+            try {
+                const response = await fetch(`/api/exercises/${currentExerciseId}/submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.error);
+
+                // Display results
+                displayResults(data.grading);
+
+            } catch (error) {
+                console.error('Submit error:', error);
+                alert('Failed to submit exercise');
+                modal.classList.remove('active');
+            }
+        }
+
+        // Display grading results
+        function displayResults(grading) {
+            const scoreNumber = document.getElementById('score-number');
+            const scoreMessage = document.getElementById('score-message');
+            const testResults = document.getElementById('test-results');
+            const feedbackSection = document.getElementById('feedback-section');
+
+            // Score
+            scoreNumber.textContent = `${grading.score}/${grading.maxScore}`;
+            scoreNumber.className = 'score-number ' +
+                (grading.percentage === 100 ? 'perfect' :
+                 grading.percentage >= 70 ? 'good' : 'needs-work');
+
+            scoreMessage.textContent = `${grading.percentage}% - ${grading.feedback.summary}`;
+
+            // Test results
+            testResults.innerHTML = '';
+            grading.results.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `test-result ${result.passed ? 'passed' : 'failed'}`;
+                div.innerHTML = `
+                    <span class="test-icon">${result.passed ? '✓' : '✗'}</span>
+                    <div>
+                        <div>${result.message}</div>
+                        <small>${result.points}/${result.maxPoints} points</small>
+                    </div>
+                `;
+                testResults.appendChild(div);
+            });
+
+            // Feedback
+            if (grading.feedback.suggestions.length > 0) {
+                feedbackSection.innerHTML = `
+                    <h3>Suggestions for Improvement</h3>
+                    <ul>
+                        ${grading.feedback.suggestions.map(s => `<li>${s}</li>`).join('')}
+                    </ul>
+                `;
+                feedbackSection.style.display = 'block';
+            } else {
+                feedbackSection.style.display = 'none';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('results-modal').classList.remove('active');
+        }
+
+        // Resize handle
+        function setupResizeHandle() {
+            const handle = document.getElementById('resize-handle');
+            const container = handle.parentElement;
+            let isResizing = false;
+
+            handle.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                document.body.style.cursor = 'ns-resize';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                const containerRect = container.getBoundingClientRect();
+                const editorHeight = e.clientY - containerRect.top;
+                const editorContainer = container.querySelector('.editor-container');
+                editorContainer.style.flex = `0 0 ${editorHeight}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                isResizing = false;
+                document.body.style.cursor = '';
+            });
+        }
+
+        // Cleanup
+        window.addEventListener('beforeunload', () => {
+            if (autoSaveInterval) clearInterval(autoSaveInterval);
+        });
+    </script>
+</body>
+</html>

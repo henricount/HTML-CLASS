@@ -1,0 +1,27 @@
+services:
+  # Web service
+  - type: web
+    name: html-journalism-course
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: html-course-db
+          property: connectionString
+
+  # PostgreSQL database
+databases:
+  - name: html-course-db
+    plan: free
+    databaseName: html_journalism_course
+    user: html_course_admin
