@@ -302,6 +302,7 @@
                 <div class="user-info" id="user-info">
                     <span id="user-name">Loading...</span>
                 </div>
+                <a href="/teacher-dashboard.html" class="btn" id="teacher-link" style="display: none;">👨‍🏫 Teacher View</a>
                 <a href="#" class="btn" onclick="logout()">Logout</a>
             </div>
         </div>
@@ -359,16 +360,34 @@
             try {
                 const response = await fetch('/api/auth/me');
                 if (!response.ok) {
-                    window.location.href = '/login.html';
+                    window.location.href = '/';
                     return false;
                 }
                 const data = await response.json();
                 currentUser = data.user;
                 document.getElementById('user-name').textContent = currentUser.full_name;
+                
+                // Check if user is admin and show teacher link
+                checkAdminStatus();
+                
                 return true;
             } catch (error) {
-                window.location.href = '/login.html';
+                window.location.href = '/';
                 return false;
+            }
+        }
+
+        async function checkAdminStatus() {
+            try {
+                const response = await fetch('/api/auth/admin-check');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.isAdmin) {
+                        document.getElementById('teacher-link').style.display = 'inline-block';
+                    }
+                }
+            } catch (error) {
+                console.log('Admin check failed:', error);
             }
         }
 
@@ -479,17 +498,17 @@
         }
 
         function startLesson(lessonId) {
-            // For now, go to first exercise of the lesson
-            window.location.href = `/lesson.html?id=${lessonId}`;
+            // Go to new database-driven lesson page
+            window.location.href = `/lesson.html?lesson=${lessonId}`;
         }
 
         async function logout() {
             try {
                 await fetch('/api/auth/logout', { method: 'POST' });
-                window.location.href = '/login.html';
+                window.location.href = '/';
             } catch (error) {
                 console.error('Logout error:', error);
-                window.location.href = '/login.html';
+                window.location.href = '/';
             }
         }
 

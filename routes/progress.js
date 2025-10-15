@@ -58,15 +58,41 @@ router.get('/', requireAuth, async (req, res) => {
 // Update time spent on lesson
 router.post('/time', requireAuth, async (req, res) => {
   try {
-    const { lessonId, seconds } = req.body;
+    const { lessonId, seconds, completed, score } = req.body;
     const userId = req.session.userId;
 
+    // Insert or update progress
     await db.query(
-      `UPDATE user_progress
-       SET time_spent_seconds = time_spent_seconds + $1
-       WHERE user_id = $2 AND lesson_id = $3`,
-      [seconds, userId, lessonId]
+      `INSERT INTO user_progress (user_id, lesson_id, started_at, time_spent_seconds, is_complete, completed_at)
+       VALUES ($1, $2, CURRENT_TIMESTAMP, $3, $4, $5)
+       ON CONFLICT (user_id, lesson_id) 
+       DO UPDATE SET 
+         time_spent_seconds = user_progress.time_spent_seconds + $3,
+         is_complete = COALESCE($4, user_progress.is_complete),
+         completed_at = CASE WHEN $4 = true THEN CURRENT_TIMESTAMP ELSE user_progress.completed_at END,
+         last_accessed = CURRENT_TIMESTAMP`,
+      [userId, lessonId, seconds, completed || false, completed ? new Date() : null]
     );
+
+    // If exercise was completed with score, save submission
+    if (completed && score !== undefined) {
+      // Find or create exercise for this lesson
+      const exerciseResult = await db.query(
+        'SELECT id FROM exercises WHERE lesson_id = $1 LIMIT 1',
+        [lessonId]
+      );
+      
+      if (exerciseResult.rows.length > 0) {
+        const exerciseId = exerciseResult.rows[0].id;
+        
+        await db.query(
+          `INSERT INTO submissions (user_id, exercise_id, code, is_complete, score, max_score, submitted_at)
+           VALUES ($1, $2, 'Interactive lesson submission', true, $3, 100, CURRENT_TIMESTAMP)
+           ON CONFLICT DO NOTHING`,
+          [userId, exerciseId, score]
+        );
+      }
+    }
 
     res.json({ success: true });
 

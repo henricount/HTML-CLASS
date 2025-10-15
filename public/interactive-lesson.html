@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Lesson - HTML Journalism Course</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e1e1e;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #2d2d2d;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3e3e3e;
+        }
+
+        .lesson-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .lesson-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .timer {
+            background: #667eea;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .lesson-panel {
+            width: 350px;
+            background: #252526;
+            border-right: 1px solid #3e3e3e;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .lesson-panel h2 {
+            color: #4ec9b0;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .lesson-panel h3 {
+            color: #dcdcaa;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        .lesson-panel p, .lesson-panel li {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            color: #cccccc;
+            font-size: 14px;
+        }
+
+        .lesson-panel ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .requirements-box {
+            background: #1e1e1e;
+            border: 1px solid #667eea;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-tabs {
+            background: #2d2d2d;
+            display: flex;
+            border-bottom: 1px solid #3e3e3e;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-right: 1px solid #3e3e3e;
+            color: #cccccc;
+            background: #1e1e1e;
+        }
+
+        .tab.active {
+            background: #2d2d2d;
+            color: #ffffff;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .editor-content {
+            flex: 1;
+            display: flex;
+        }
+
+        .code-editor {
+            flex: 1;
+            position: relative;
+        }
+
+        .preview-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #3e3e3e;
+        }
+
+        .preview-header {
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3e3e3e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-frame {
+            flex: 1;
+            background: white;
+            border: none;
+        }
+
+        .grading-results {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #2d2d2d;
+            border: 1px solid #3e3e3e;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+            max-width: 500px;
+            width: 90%;
+            display: none;
+        }
+
+        .grading-results.show {
+            display: block;
+        }
+
+        .score-display {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .score-perfect {
+            color: #28a745;
+        }
+
+        .score-good {
+            color: #ffc107;
+        }
+
+        .score-needs-work {
+            color: #dc3545;
+        }
+
+        .test-results {
+            margin: 20px 0;
+        }
+
+        .test-result {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            background: #1e1e1e;
+        }
+
+        .test-result.passed {
+            border-left: 4px solid #28a745;
+        }
+
+        .test-result.failed {
+            border-left: 4px solid #dc3545;
+        }
+
+        .test-icon {
+            margin-right: 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .progress-indicator {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #3e3e3e;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="lesson-info">
+            <div class="lesson-title" id="lesson-title">Loading Lesson...</div>
+            <div class="timer" id="timer">⏱️ 0:00</div>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-success" id="submit-btn" onclick="submitExercise()">
+                ✅ Submit & Grade
+            </button>
+            <button class="btn btn-secondary" onclick="resetCode()">
+                🔄 Reset
+            </button>
+            <a href="/dashboard.html" class="btn btn-primary">
+                ← Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="lesson-panel">
+            <div class="progress-indicator">
+                <div>Progress: <span id="progress-text">0/6 lessons completed</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <h2 id="lesson-content-title">Lesson Instructions</h2>
+            <div id="lesson-instructions">
+                <p>Loading lesson content...</p>
+            </div>
+
+            <div class="requirements-box">
+                <h3>📝 Exercise Requirements</h3>
+                <div id="exercise-requirements">
+                    <p>Loading exercise requirements...</p>
+                </div>
+            </div>
+
+            <div class="requirements-box">
+                <h3>💡 Hints & Tips</h3>
+                <ul>
+                    <li>Use proper HTML structure</li>
+                    <li>Check your syntax carefully</li>
+                    <li>Preview your work regularly</li>
+                    <li>Ask for help if needed</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="editor-container">
+            <div class="editor-tabs">
+                <div class="tab active" onclick="switchTab('html')">
+                    📄 HTML
+                </div>
+                <div class="tab" onclick="switchTab('preview')">
+                    👁️ Preview
+                </div>
+            </div>
+
+            <div class="editor-content">
+                <div class="code-editor">
+                    <div id="monaco-editor" style="width: 100%; height: 100%;"></div>
+                </div>
+
+                <div class="preview-panel">
+                    <div class="preview-header">
+                        <span>Live Preview</span>
+                        <button class="btn btn-primary" onclick="updatePreview()" style="padding: 4px 12px; font-size: 12px;">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                    <iframe id="preview-frame" class="preview-frame"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grading-results" id="grading-modal">
+        <div class="score-display">
+            <div class="score-number" id="score-number">-</div>
+            <div id="score-message">Calculating score...</div>
+        </div>
+        
+        <div class="test-results" id="test-results">
+            <!-- Test results will be populated here -->
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-primary" onclick="closeGrading()">Continue</button>
+            <button class="btn btn-success" id="next-lesson-btn" onclick="goToNextLesson()" style="display: none;">
+                Next Lesson →
+            </button>
+        </div>
+    </div>
+
+    <!-- Monaco Editor -->
+    <script src="https://unpkg.com/monaco-editor@0.44.0/min/vs/loader.js"></script>
+
+    <script>
+        let editor;
+        let currentLessonId = 1;
+        let currentExerciseId = null;
+        let startTime = Date.now();
+        let timeSpent = 0;
+        let timerInterval;
+        let autoSaveTimer;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get lesson ID from URL or default to 1
+            const urlParams = new URLSearchParams(window.location.search);
+            currentLessonId = parseInt(urlParams.get('lesson')) || 1;
+            
+            initializeEditor();
+            loadLessonData();
+            startTimer();
+        });
+
+        // Initialize Monaco Editor
+        function initializeEditor() {
+            require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.44.0/min/vs' } });
+            require(['vs/editor/editor.main'], function () {
+                editor = monaco.editor.create(document.getElementById('monaco-editor'), {
+                    value: '<!DOCTYPE html>\\n<html>\\n<head>\\n    <title>My Page</title>\\n</head>\\n<body>\\n    <h1>Hello World!</h1>\\n</body>\\n</html>',
+                    language: 'html',
+                    theme: 'vs-dark',
+                    automaticLayout: true,
+                    fontSize: 14,
+                    lineNumbers: 'on',
+                    wordWrap: 'on',
+                    minimap: { enabled: true },
+                    bracketPairColorization: { enabled: true },
+                    formatOnPaste: true,
+                    formatOnType: true,
+                    scrollBeyondLastLine: false
+                });
+
+                // Auto-update preview
+                editor.onDidChangeModelContent(() => {
+                    updatePreview();
+                    
+                    // Auto-save after 2 seconds of inactivity
+                    clearTimeout(autoSaveTimer);
+                    autoSaveTimer = setTimeout(autoSave, 2000);
+                });
+
+                // Initial preview
+                updatePreview();
+            });
+        }
+
+        // Load lesson data
+        async function loadLessonData() {
+            try {
+                document.getElementById('lesson-title').textContent = `Lesson ${currentLessonId}: Loading...`;
+                
+                // Always load fallback content for now (until API is fully implemented)
+                loadFallbackContent();
+                
+                // Update progress
+                updateProgress();
+                
+            } catch (error) {
+                console.error('Error loading lesson:', error);
+                loadFallbackContent();
+            }
+        }
+
+        // Load fallback content for lessons
+        function loadFallbackContent() {
+            const lessonContent = {
+                1: {
+                    title: 'HTML Basics & Structure',
+                    instructions: `
+                        <h3>What is HTML?</h3>
+                        <p>HTML (HyperText Markup Language) is the foundation of web development. It's a markup language that uses tags to structure content and tell browsers how to display information.</p>
+                        
+                        <h3>HTML Document Structure</h3>
+                        <p>Every HTML document follows a standard structure:</p>
+                        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My First Web Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Welcome to My Website&lt;/h1&gt;
+    &lt;p&gt;This is my first paragraph.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                        
+                        <h3>HTML Tags Explained</h3>
+                        <ul>
+                            <li><strong>&lt;!DOCTYPE html&gt;</strong> - Tells browser this is HTML5</li>
+                            <li><strong>&lt;html&gt;</strong> - Root element containing all content</li>
+                            <li><strong>&lt;head&gt;</strong> - Contains metadata (not visible on page)</li>
+                            <li><strong>&lt;title&gt;</strong> - Shows in browser tab</li>
+                            <li><strong>&lt;body&gt;</strong> - Contains all visible content</li>
+                            <li><strong>&lt;h1&gt;</strong> - Main heading (most important)</li>
+                            <li><strong>&lt;p&gt;</strong> - Paragraph of text</li>
+                        </ul>
+                        
+                        <h3>Heading Hierarchy</h3>
+                        <p>HTML provides six levels of headings: h1 (most important) to h6 (least important):</p>
+                        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">
+&lt;h1&gt;Main Title&lt;/h1&gt;
+&lt;h2&gt;Section Title&lt;/h2&gt;
+&lt;h3&gt;Subsection Title&lt;/h3&gt;
+&lt;h4&gt;Sub-subsection Title&lt;/h4&gt;</pre>
+                        
+                        <h3>Paragraphs and Line Breaks</h3>
+                        <p>Use &lt;p&gt; tags for paragraphs. HTML ignores extra spaces and line breaks in your code:</p>
+                        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">
+&lt;p&gt;This is a paragraph with some text.&lt;/p&gt;
+&lt;p&gt;This is another paragraph. Notice how each 
+paragraph is separated on the webpage.&lt;/p&gt;</pre>
+                        
+                        <h3>Best Practices</h3>
+                        <ul>
+                            <li>Always include DOCTYPE declaration</li>
+                            <li>Use semantic HTML tags</li>
+                            <li>Properly nest your tags</li>
+                            <li>Include meaningful titles</li>
+                            <li>Use headings in hierarchical order</li>
+                        </ul>
+                    `,
+                    requirements: `
+                        <h3>📝 Formative Assessment</h3>
+                        <p>Practice the basics:</p>
+                        <ul>
+                            <li>Create a complete HTML5 document structure</li>
+                            <li>Add a meaningful title in the head section</li>
+                            <li>Include your name as the main h1 heading</li>
+                            <li>Write 3 paragraphs about yourself using &lt;p&gt; tags</li>
+                            <li>Add an h2 subheading "About Me"</li>
+                            <li>Add an h3 subheading "My Goals"</li>
+                        </ul>
+                        
+                        <h3>✅ Summative Assessment Criteria</h3>
+                        <p>To pass this lesson (70% required):</p>
+                        <ul>
+                            <li><strong>10 pts:</strong> Correct DOCTYPE declaration</li>
+                            <li><strong>15 pts:</strong> Proper HTML structure tags</li>
+                            <li><strong>15 pts:</strong> Head section with title</li>
+                            <li><strong>15 pts:</strong> Body section present</li>
+                            <li><strong>15 pts:</strong> Main h1 heading included</li>
+                            <li><strong>15 pts:</strong> Multiple paragraphs (2+)</li>
+                            <li><strong>15 pts:</strong> Additional headings (h2/h3)</li>
+                        </ul>
+                    `
+                },
+                2: {
+                    title: 'Text Formatting & Links',
+                    instructions: `
+                        <h3>Text Formatting in HTML</h3>
+                        <p>HTML provides several tags to format text and convey meaning:</p>
+                        
+                        <h3>Semantic Text Tags</h3>
+                        <ul>
+                            <li><strong>&lt;strong&gt;</strong> - Important text (bold by default)</li>
+                            <li><strong>&lt;em&gt;</strong> - Emphasized text (italic by default)</li>
+                            <li><strong>&lt;mark&gt;</strong> - Highlighted text</li>
+                            <li><strong>&lt;small&gt;</strong> - Smaller text</li>
+                            <li><strong>&lt;del&gt;</strong> - Deleted text (strikethrough)</li>
+                            <li><strong>&lt;ins&gt;</strong> - Inserted text (underlined)</li>
+                        </ul>
+                        
+                        <h3>Text Formatting Examples</h3>
+                        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">
+&lt;p&gt;This is &lt;strong&gt;very important&lt;/strong&gt; text.&lt;/p&gt;
+&lt;p&gt;This text is &lt;em&gt;emphasized&lt;/em&gt; for clarity.&lt;/p&gt;
+&lt;p&gt;You can &lt;mark&gt;highlight&lt;/mark&gt; key information.&lt;/p&gt;
+&lt;p&gt;This is &lt;small&gt;fine print&lt;/small&gt; text.&lt;/p&gt;</pre>
+                        
+                        <h3>Creating Hyperlinks</h3>
+                        <p>The anchor tag (&lt;a&gt;) creates links to other pages, websites, or sections:</p>
+                        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">
+&lt;!-- Link to another website --&gt;
+&lt;a href="https://www.google.com"&gt;Visit Google&lt;/a&gt;
+
+&lt;!-- Link to another page on your site --&gt;
+&lt;a href="about.html"&gt;About Us&lt;/a&gt;
+
+&lt;!-- Link to email --&gt;
+&lt;a href="mailto:contact@example.com"&gt;Send Email&lt;/a&gt;
+
+&lt;!-- Link that opens in new tab --&gt;
+&lt;a href="https://www.bbc.com" target="_blank"&gt;BBC News&lt;/a&gt;</pre>
+                        
+                        <h3>Creating Lists</h3>
+                        
+                        <h4>Unordered Lists (Bullet Points)</h4>
+                        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">
+&lt;ul&gt;
+    &lt;li&gt;First item&lt;/li&gt;
+    &lt;li&gt;Second item&lt;/li&gt;
+    &lt;li&gt;Third item&lt;/li&gt;
+&lt;/ul&gt;</pre>
+                        
+                        <h4>Ordered Lists (Numbered)</h4>
+                        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">
+&lt;ol&gt;
+    &lt;li&gt;First step&lt;/li&gt;
+    &lt;li&gt;Second step&lt;/li&gt;
+    &lt;li&gt;Third step&lt;/li&gt;
+&lt;/ol&gt;</pre>
+                        
+                        <h3>Line Breaks and Spacing</h3>
+                        <ul>
+                            <li><strong>&lt;br&gt;</strong> - Creates a line break</li>
+                            <li><strong>&lt;hr&gt;</strong> - Creates a horizontal rule (divider line)</li>
+                            <li><strong>&lt;pre&gt;</strong> - Preserves spaces and line breaks</li>
+                        </ul>
+                        
+                        <h3>Example for Journalism</h3>
+                        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">
+&lt;h1&gt;Breaking: Local Election Results&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;IMPORTANT UPDATE:&lt;/strong&gt; The election results 
+are now &lt;em&gt;officially confirmed&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Key Points&lt;/h2&gt;
+&lt;ul&gt;
+    &lt;li&gt;Voter turnout: 68%&lt;/li&gt;
+    &lt;li&gt;Total votes cast: 45,230&lt;/li&gt;
+    &lt;li&gt;Winner announced at 11:30 PM&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more details, visit &lt;a href="https://elections.gov" 
+target="_blank"&gt;the official election website&lt;/a&gt;.&lt;/p&gt;</pre>
+                    `,
+                    requirements: `
+                        <h3>📝 Formative Assessment</h3>
+                        <p>Create a news article with formatting:</p>
+                        <ul>
+                            <li>Use &lt;strong&gt; and &lt;em&gt; tags for emphasis</li>
+                            <li>Create at least 3 different types of links</li>
+                            <li>Add an unordered list with 4+ news points</li>
+                            <li>Add an ordered list with 3+ steps or rankings</li>
+                            <li>Use line breaks (&lt;br&gt;) appropriately</li>
+                            <li>Add a horizontal rule (&lt;hr&gt;) as a divider</li>
+                        </ul>
+                        
+                        <h3>✅ Summative Assessment Criteria</h3>
+                        <p>To pass this lesson (70% required):</p>
+                        <ul>
+                            <li><strong>10 pts:</strong> DOCTYPE and basic structure</li>
+                            <li><strong>15 pts:</strong> Bold text formatting (&lt;strong&gt; or &lt;b&gt;)</li>
+                            <li><strong>15 pts:</strong> Italic text formatting (&lt;em&gt; or &lt;i&gt;)</li>
+                            <li><strong>15 pts:</strong> Multiple hyperlinks (3+)</li>
+                            <li><strong>15 pts:</strong> Unordered list (&lt;ul&gt;)</li>
+                            <li><strong>15 pts:</strong> Ordered list (&lt;ol&gt;)</li>
+                            <li><strong>15 pts:</strong> Proper list structure with &lt;li&gt; tags</li>
+                        </ul>
+                    `
+                },
+                3: {
+                    title: 'Images & Multimedia',
+                    instructions: `
+                        <p>Learn to add visual elements to your web pages:</p>
+                        <ul>
+                            <li>Adding images with the img tag</li>
+                            <li>Alt text for accessibility</li>
+                            <li>Image sizing and alignment</li>
+                            <li>Embedding videos and audio</li>
+                        </ul>
+                        <p><strong>Image Best Practices:</strong></p>
+                        <p>Always include alt text for images to make your content accessible to screen readers.</p>
+                    `,
+                    requirements: `
+                        <ul>
+                            <li>Add at least 2 images to your page</li>
+                            <li>Include meaningful alt text for each image</li>
+                            <li>Use width and height attributes</li>
+                            <li>Create a figure with caption</li>
+                        </ul>
+                    `
+                },
+                4: {
+                    title: 'Tables & Forms',
+                    instructions: `
+                        <p>Learn to create data tables and interactive forms:</p>
+                        <ul>
+                            <li>Creating tables with headers</li>
+                            <li>Table structure: thead, tbody, tfoot</li>
+                            <li>Form elements: input, textarea, select</li>
+                            <li>Form validation and accessibility</li>
+                        </ul>
+                        <p><strong>Table Structure:</strong></p>
+                        <p>Use proper table structure with &lt;thead&gt;, &lt;tbody&gt;, and meaningful headers.</p>
+                    `,
+                    requirements: `
+                        <ul>
+                            <li>Create a data table with at least 3 columns</li>
+                            <li>Include table headers</li>
+                            <li>Add a contact form with 4+ fields</li>
+                            <li>Use different input types</li>
+                        </ul>
+                    `
+                },
+                5: {
+                    title: 'Introduction to CSS',
+                    instructions: `
+                        <p>Learn to style your HTML with CSS:</p>
+                        <ul>
+                            <li>CSS syntax and selectors</li>
+                            <li>Colors, fonts, and spacing</li>
+                            <li>The box model</li>
+                            <li>Internal vs external stylesheets</li>
+                        </ul>
+                        <p><strong>CSS Basics:</strong></p>
+                        <p>CSS (Cascading Style Sheets) controls the appearance of HTML elements.</p>
+                    `,
+                    requirements: `
+                        <ul>
+                            <li>Add a &lt;style&gt; section in your head</li>
+                            <li>Style your headings with colors</li>
+                            <li>Change font family for paragraphs</li>
+                            <li>Add background colors and padding</li>
+                        </ul>
+                    `
+                },
+                6: {
+                    title: 'Responsive Design & Layout',
+                    instructions: `
+                        <p>Learn to create responsive, mobile-friendly layouts:</p>
+                        <ul>
+                            <li>CSS Flexbox and Grid</li>
+                            <li>Media queries for responsive design</li>
+                            <li>Mobile-first approach</li>
+                            <li>Modern layout techniques</li>
+                        </ul>
+                        <p><strong>Responsive Design:</strong></p>
+                        <p>Make your websites work perfectly on all device sizes using flexible layouts.</p>
+                    `,
+                    requirements: `
+                        <ul>
+                            <li>Use CSS Flexbox for layout</li>
+                            <li>Add a responsive navigation menu</li>
+                            <li>Include media queries for mobile</li>
+                            <li>Create a two-column layout</li>
+                        </ul>
+                    `
+                }
+            };
+
+            const lesson = lessonContent[currentLessonId] || lessonContent[1];
+            document.getElementById('lesson-title').textContent = `Lesson ${currentLessonId}: ${lesson.title}`;
+            document.getElementById('lesson-content-title').textContent = lesson.title;
+            document.getElementById('lesson-instructions').innerHTML = lesson.instructions;
+            document.getElementById('exercise-requirements').innerHTML = lesson.requirements;
+        }
+
+        // Load exercise data (placeholder)
+        function loadExerciseData() {
+            // This would normally fetch from /api/exercises endpoint
+            // For now, we'll use the fallback content
+            console.log('Exercise data loaded for lesson', currentLessonId);
+        }
+
+        // Timer functions
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeSpent = Math.floor((Date.now() - startTime) / 1000);
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeSpent / 3600);
+            const minutes = Math.floor((timeSpent % 3600) / 60);
+            const seconds = timeSpent % 60;
+            
+            let timeText = '';
+            if (hours > 0) {
+                timeText = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                timeText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            document.getElementById('timer').textContent = `⏱️ ${timeText}`;
+        }
+
+        // Update preview
+        function updatePreview() {
+            if (!editor) return;
+            
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            document.getElementById('preview-frame').src = url;
+        }
+
+        // Auto-save function
+        function autoSave() {
+            if (!editor) return;
+            
+            const code = editor.getValue();
+            localStorage.setItem(`lesson_${currentLessonId}_code`, code);
+            
+            // Send to server
+            fetch(`/api/lessons/${currentLessonId}/save`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, timeSpent })
+            }).catch(err => console.log('Auto-save offline'));
+        }
+
+        // Submit exercise for grading
+        async function submitExercise() {
+            if (!editor) return;
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.textContent = '⏳ Grading...';
+            submitBtn.disabled = true;
+
+            const code = editor.getValue();
+            
+            // Simple grading logic
+            const gradeResult = gradeHTML(code);
+            
+            // Show results
+            showGradingResults(gradeResult);
+            
+            // Save progress
+            await saveProgress(gradeResult);
+            
+            submitBtn.textContent = '✅ Submit & Grade';
+            submitBtn.disabled = false;
+        }
+
+        // HTML grading engine for different lessons
+        function gradeHTML(code) {
+            const tests = [];
+            let totalScore = 0;
+            // Base score (common tests): 70 points (DOCTYPE: 10, HTML: 15, HEAD: 15, TITLE: 15, BODY: 15)
+            // Lesson-specific tests vary by lesson
+            const maxScore = currentLessonId === 1 ? 115 : 
+                            currentLessonId === 2 ? 145 : 
+                            currentLessonId === 3 ? 100 : 
+                            currentLessonId === 4 ? 100 : 
+                            currentLessonId === 5 ? 100 : 100;
+
+            // Common tests for all lessons
+            // Test 1: Has DOCTYPE
+            if (code.includes('<!DOCTYPE html>')) {
+                tests.push({ name: 'DOCTYPE declaration', passed: true, points: 10 });
+                totalScore += 10;
+            } else {
+                tests.push({ name: 'DOCTYPE declaration', passed: false, points: 0 });
+            }
+
+            // Test 2: Has html tags
+            if (code.includes('<html>') && code.includes('</html>')) {
+                tests.push({ name: 'HTML structure', passed: true, points: 15 });
+                totalScore += 15;
+            } else {
+                tests.push({ name: 'HTML structure', passed: false, points: 0 });
+            }
+
+            // Test 3: Has head section
+            if (code.includes('<head>') && code.includes('</head>')) {
+                tests.push({ name: 'Head section', passed: true, points: 15 });
+                totalScore += 15;
+            } else {
+                tests.push({ name: 'Head section', passed: false, points: 0 });
+            }
+
+            // Test 4: Has title
+            if (code.includes('<title>') && code.includes('</title>')) {
+                tests.push({ name: 'Page title', passed: true, points: 15 });
+                totalScore += 15;
+            } else {
+                tests.push({ name: 'Page title', passed: false, points: 0 });
+            }
+
+            // Test 5: Has body
+            if (code.includes('<body>') && code.includes('</body>')) {
+                tests.push({ name: 'Body section', passed: true, points: 15 });
+                totalScore += 15;
+            } else {
+                tests.push({ name: 'Body section', passed: false, points: 0 });
+            }
+
+            // Lesson-specific tests
+            if (currentLessonId === 1) {
+                // Lesson 1: HTML Basics
+                if (code.includes('<h1>')) {
+                    tests.push({ name: 'Main heading (h1)', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Main heading (h1)', passed: false, points: 0 });
+                }
+
+                const pCount = (code.match(/<p>/g) || []).length;
+                if (pCount >= 2) {
+                    tests.push({ name: 'Multiple paragraphs (2+)', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Multiple paragraphs (2+)', passed: false, points: 0 });
+                }
+                
+                // Check for additional headings (h2, h3)
+                if (code.includes('<h2>') || code.includes('<h3>')) {
+                    tests.push({ name: 'Additional headings (h2/h3)', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Additional headings (h2/h3)', passed: false, points: 0 });
+                }
+            } else if (currentLessonId === 2) {
+                // Lesson 2: Text Formatting
+                if (code.includes('<strong>') || code.includes('<b>')) {
+                    tests.push({ name: 'Bold text formatting', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Bold text formatting', passed: false, points: 0 });
+                }
+
+                if (code.includes('<em>') || code.includes('<i>')) {
+                    tests.push({ name: 'Italic text formatting', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Italic text formatting', passed: false, points: 0 });
+                }
+
+                const aCount = (code.match(/<a /g) || []).length;
+                if (aCount >= 3) {
+                    tests.push({ name: 'Multiple hyperlinks (3+)', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Multiple hyperlinks (3+)', passed: false, points: 0 });
+                }
+                
+                // Check for unordered list
+                if (code.includes('<ul>') && code.includes('<li>')) {
+                    tests.push({ name: 'Unordered list with items', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Unordered list with items', passed: false, points: 0 });
+                }
+                
+                // Check for ordered list
+                if (code.includes('<ol>') && code.includes('<li>')) {
+                    tests.push({ name: 'Ordered list with items', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Ordered list with items', passed: false, points: 0 });
+                }
+            } else if (currentLessonId === 3) {
+                // Lesson 3: Images
+                const imgCount = (code.match(/<img /g) || []).length;
+                if (imgCount >= 2) {
+                    tests.push({ name: 'Multiple images (2+)', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Multiple images (2+)', passed: false, points: 0 });
+                }
+
+                if (code.includes('alt=')) {
+                    tests.push({ name: 'Alt text for images', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Alt text for images', passed: false, points: 0 });
+                }
+            } else if (currentLessonId === 4) {
+                // Lesson 4: Tables & Forms
+                if (code.includes('<table>') && code.includes('<th>')) {
+                    tests.push({ name: 'Data table with headers', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Data table with headers', passed: false, points: 0 });
+                }
+
+                if (code.includes('<form>') && code.includes('<input')) {
+                    tests.push({ name: 'Contact form with inputs', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Contact form with inputs', passed: false, points: 0 });
+                }
+            } else if (currentLessonId === 5) {
+                // Lesson 5: CSS
+                if (code.includes('<style>') || code.includes('style=')) {
+                    tests.push({ name: 'CSS styling added', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'CSS styling added', passed: false, points: 0 });
+                }
+
+                if (code.includes('color:') || code.includes('background')) {
+                    tests.push({ name: 'Color styling', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Color styling', passed: false, points: 0 });
+                }
+            } else {
+                // Default tests for other lessons
+                if (code.includes('<h1>')) {
+                    tests.push({ name: 'Main heading (h1)', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Main heading (h1)', passed: false, points: 0 });
+                }
+
+                const pCount = (code.match(/<p>/g) || []).length;
+                if (pCount >= 1) {
+                    tests.push({ name: 'Content paragraphs', passed: true, points: 15 });
+                    totalScore += 15;
+                } else {
+                    tests.push({ name: 'Content paragraphs', passed: false, points: 0 });
+                }
+            }
+
+            const percentage = Math.round((totalScore / maxScore) * 100);
+            const passed = percentage >= 70;
+
+            return {
+                totalScore,
+                maxScore,
+                percentage,
+                passed,
+                tests,
+                feedback: passed ? 
+                    `Excellent! You scored ${percentage}%. You can proceed to the next lesson.` : 
+                    `You scored ${percentage}%. You need 70% to pass. Review the requirements and try again.`
+            };
+        }
+
+        // Show grading results
+        function showGradingResults(result) {
+            document.getElementById('score-number').textContent = `${result.percentage}%`;
+            document.getElementById('score-number').className = `score-number ${
+                result.percentage === 100 ? 'score-perfect' :
+                result.percentage >= 70 ? 'score-good' : 'score-needs-work'
+            }`;
+            
+            document.getElementById('score-message').textContent = result.feedback;
+            
+            // Show test results
+            const testResults = document.getElementById('test-results');
+            testResults.innerHTML = result.tests.map(test => `
+                <div class="test-result ${test.passed ? 'passed' : 'failed'}">
+                    <span class="test-icon">${test.passed ? '✓' : '✗'}</span>
+                    <div>
+                        <div>${test.name}</div>
+                        <small>${test.points}/15 points</small>
+                    </div>
+                </div>
+            `).join('');
+
+            // Show next lesson button if passed
+            if (result.passed) {
+                document.getElementById('next-lesson-btn').style.display = 'inline-block';
+            }
+
+            document.getElementById('grading-modal').classList.add('show');
+        }
+
+        // Close grading modal
+        function closeGrading() {
+            document.getElementById('grading-modal').classList.remove('show');
+        }
+
+        // Go to next lesson
+        function goToNextLesson() {
+            const nextLesson = currentLessonId + 1;
+            if (nextLesson <= 6) {
+                window.location.href = `?lesson=${nextLesson}`;
+            } else {
+                alert('Congratulations! You\'ve completed all lessons!');
+                window.location.href = '/dashboard.html';
+            }
+        }
+
+        // Save progress
+        async function saveProgress(gradeResult) {
+            try {
+                await fetch('/api/progress/time', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        lessonId: currentLessonId, 
+                        seconds: timeSpent,
+                        completed: gradeResult.passed,
+                        score: gradeResult.percentage
+                    })
+                });
+            } catch (error) {
+                console.log('Progress save failed:', error);
+            }
+        }
+
+        // Update progress display
+        function updateProgress() {
+            // This would normally fetch actual progress from the API
+            // For now, show basic progress
+            const completedLessons = Math.max(0, currentLessonId - 1);
+            const progressPercent = Math.round((completedLessons / 6) * 100);
+            
+            document.getElementById('progress-text').textContent = `${completedLessons}/6 lessons completed`;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+        }
+
+        // Reset code
+        function resetCode() {
+            if (editor && confirm('Reset your code? This cannot be undone.')) {
+                editor.setValue('<!DOCTYPE html>\\n<html>\\n<head>\\n    <title>My Page</title>\\n</head>\\n<body>\\n    <h1>Hello World!</h1>\\n</body>\\n</html>');
+                updatePreview();
+            }
+        }
+
+        // Tab switching (for mobile)
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+        }
+
+        // Pause timer when page is not visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(timerInterval);
+                autoSave();
+            } else {
+                startTime = Date.now() - (timeSpent * 1000);
+                startTimer();
+            }
+        });
+    </script>
+</body>
+</html>

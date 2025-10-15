@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 2: Text Formatting & Links</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .lesson-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .content-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .content-section h2 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .content-section h3 {
+            color: #667eea;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .info-box strong {
+            color: #2196F3;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box strong {
+            color: #ff9800;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box strong {
+            color: #28a745;
+        }
+
+        .code-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        .code-box code {
+            color: #f8f8f2;
+        }
+
+        .code-label {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .output-box {
+            background: #f9f9f9;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .output-label {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .try-it {
+            background: #f0f0f0;
+            border: 2px dashed #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .try-it h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-button:hover {
+            opacity: 0.9;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .side-by-side {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="lesson-number">LESSON 2</span>
+            <h1>Text Formatting & Links</h1>
+            <p>Make your text stand out and connect your pages together</p>
+        </header>
+
+        <div class="content-section">
+            <h2>Text Formatting Tags</h2>
+            <p>Just like formatting text in Microsoft Word, HTML allows you to make text <strong>bold</strong>, <em>italic</em>, and more. These tags help emphasize important information in your articles.</p>
+
+            <h3>Bold and Strong</h3>
+            <p>There are two ways to make text bold:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Code Example</th>
+                        <th>When to Use</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>&lt;strong&gt;</code></td>
+                        <td><code>&lt;strong&gt;Important!&lt;/strong&gt;</code></td>
+                        <td>For important text (search engines pay attention to this)</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;b&gt;</code></td>
+                        <td><code>&lt;b&gt;Bold text&lt;/b&gt;</code></td>
+                        <td>For bold styling without extra importance</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <strong>For Journalists:</strong> Use <code>&lt;strong&gt;</code> for key facts, names, or quotes you want to emphasize. Use <code>&lt;b&gt;</code> just for visual styling.
+            </div>
+
+            <h3>Italic and Emphasis</h3>
+            <p>Similarly, there are two ways to make text italic:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Code Example</th>
+                        <th>When to Use</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>&lt;em&gt;</code></td>
+                        <td><code>&lt;em&gt;emphasized text&lt;/em&gt;</code></td>
+                        <td>For emphasis (like vocal stress when reading aloud)</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;i&gt;</code></td>
+                        <td><code>&lt;i&gt;italic text&lt;/i&gt;</code></td>
+                        <td>For technical terms, foreign words, book titles</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Other Useful Formatting Tags</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Purpose</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>&lt;u&gt;</code></td>
+                        <td>Underline text</td>
+                        <td><code>&lt;u&gt;underlined&lt;/u&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;mark&gt;</code></td>
+                        <td>Highlight text (like a yellow marker)</td>
+                        <td><code>&lt;mark&gt;highlighted&lt;/mark&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;small&gt;</code></td>
+                        <td>Smaller text (for fine print)</td>
+                        <td><code>&lt;small&gt;small text&lt;/small&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;del&gt;</code></td>
+                        <td>Deleted text (strikethrough)</td>
+                        <td><code>&lt;del&gt;removed&lt;/del&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;ins&gt;</code></td>
+                        <td>Inserted text (underlined)</td>
+                        <td><code>&lt;ins&gt;added&lt;/ins&gt;</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="try-it">
+                <h4>TRY IT - Formatting Practice</h4>
+                <div class="code-box">
+                    <div class="code-label">Type This</div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Formatting Practice&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Breaking News&lt;/h1&gt;
+
+    &lt;p&gt;&lt;strong&gt;Important:&lt;/strong&gt; The mayor announced a
+    &lt;em&gt;new initiative&lt;/em&gt; today.&lt;/p&gt;
+
+    &lt;p&gt;The book &lt;i&gt;Digital Journalism Today&lt;/i&gt; covers
+    this topic in detail.&lt;/p&gt;
+
+    &lt;p&gt;&lt;mark&gt;This information is crucial&lt;/mark&gt; for
+    understanding the story.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+                <p><strong>Save as:</strong> <code>formatting-test.html</code> and open it in your browser!</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Lists: Organizing Information</h2>
+            <p>Lists are essential for journalism - perfect for bullet points, numbered steps, or quick facts.</p>
+
+            <h3>Unordered Lists (Bullet Points)</h3>
+            <p>Use <code>&lt;ul&gt;</code> (unordered list) for items where order doesn't matter:</p>
+
+            <div class="side-by-side">
+                <div>
+                    <div class="code-box">
+                        <div class="code-label">Code</div>
+                        <pre><code>&lt;h3&gt;Key Points&lt;/h3&gt;
+&lt;ul&gt;
+    &lt;li&gt;First point&lt;/li&gt;
+    &lt;li&gt;Second point&lt;/li&gt;
+    &lt;li&gt;Third point&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+                    </div>
+                </div>
+                <div>
+                    <div class="output-box">
+                        <div class="output-label">Output</div>
+                        <h3>Key Points</h3>
+                        <ul>
+                            <li>First point</li>
+                            <li>Second point</li>
+                            <li>Third point</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Ordered Lists (Numbered Lists)</h3>
+            <p>Use <code>&lt;ol&gt;</code> (ordered list) when sequence matters:</p>
+
+            <div class="side-by-side">
+                <div>
+                    <div class="code-box">
+                        <div class="code-label">Code</div>
+                        <pre><code>&lt;h3&gt;Steps to Follow&lt;/h3&gt;
+&lt;ol&gt;
+    &lt;li&gt;First step&lt;/li&gt;
+    &lt;li&gt;Second step&lt;/li&gt;
+    &lt;li&gt;Third step&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+                    </div>
+                </div>
+                <div>
+                    <div class="output-box">
+                        <div class="output-label">Output</div>
+                        <h3>Steps to Follow</h3>
+                        <ol>
+                            <li>First step</li>
+                            <li>Second step</li>
+                            <li>Third step</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>Remember:</strong> <code>&lt;li&gt;</code> stands for "list item" and must always be inside either <code>&lt;ul&gt;</code> or <code>&lt;ol&gt;</code> tags.
+            </div>
+
+            <h3>Nested Lists</h3>
+            <p>You can put lists inside lists for sub-points:</p>
+
+            <div class="code-box">
+                <div class="code-label">Nested List Example</div>
+                <pre><code>&lt;h3&gt;Story Elements&lt;/h3&gt;
+&lt;ul&gt;
+    &lt;li&gt;Introduction
+        &lt;ul&gt;
+            &lt;li&gt;Lead paragraph&lt;/li&gt;
+            &lt;li&gt;Hook&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;Body
+        &lt;ul&gt;
+            &lt;li&gt;Facts&lt;/li&gt;
+            &lt;li&gt;Quotes&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;Conclusion&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Creating Links</h2>
+            <p>Links are what make the web "web-like" - they connect pages together. The <code>&lt;a&gt;</code> tag (anchor) creates hyperlinks.</p>
+
+            <h3>Basic Link Structure</h3>
+            <div class="code-box">
+                <div class="code-label">Link Syntax</div>
+                <code>&lt;a href="destination.html"&gt;Click here&lt;/a&gt;</code>
+            </div>
+
+            <p>Breaking it down:</p>
+            <ul>
+                <li><code>&lt;a&gt;</code> - the anchor tag</li>
+                <li><code>href</code> - "hypertext reference" - where the link goes</li>
+                <li><code>"destination.html"</code> - the file or URL to link to</li>
+                <li><code>Click here</code> - the clickable text (what users see)</li>
+                <li><code>&lt;/a&gt;</code> - closing tag</li>
+            </ul>
+
+            <h3>Types of Links</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Link Type</th>
+                        <th>Example</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>External Link</strong><br>(to another website)</td>
+                        <td><code>&lt;a href="https://www.bbc.com"&gt;BBC News&lt;/a&gt;</code></td>
+                        <td>Linking to sources, references</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Internal Link</strong><br>(to another page on your site)</td>
+                        <td><code>&lt;a href="about.html"&gt;About Us&lt;/a&gt;</code></td>
+                        <td>Navigation between your pages</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email Link</strong></td>
+                        <td><code>&lt;a href="mailto:tips@news.com"&gt;Email Us&lt;/a&gt;</code></td>
+                        <td>Contact information</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Same Page Link</strong><br>(anchor within page)</td>
+                        <td><code>&lt;a href="#section2"&gt;Jump to Section 2&lt;/a&gt;</code></td>
+                        <td>Table of contents, back to top</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Opening Links in New Tabs</h3>
+            <p>Use the <code>target="_blank"</code> attribute to open links in a new tab:</p>
+
+            <div class="code-box">
+                <div class="code-label">New Tab Link</div>
+                <code>&lt;a href="https://www.nytimes.com" target="_blank"&gt;New York Times&lt;/a&gt;</code>
+            </div>
+
+            <div class="warning-box">
+                <strong>Best Practice:</strong> Use <code>target="_blank"</code> for external links (keeps users on your site). Let internal links open in the same tab.
+            </div>
+
+            <h3>Link Titles (Tooltips)</h3>
+            <p>Add a <code>title</code> attribute to show a tooltip when users hover:</p>
+
+            <div class="code-box">
+                <div class="code-label">Link with Tooltip</div>
+                <code>&lt;a href="article.html" title="Read the full story"&gt;Continue reading&lt;/a&gt;</code>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Line Breaks and Special Characters</h2>
+
+            <h3>Line Breaks</h3>
+            <p>Sometimes you need a line break without starting a new paragraph. Use <code>&lt;br&gt;</code>:</p>
+
+            <div class="code-box">
+                <div class="code-label">Line Break Example</div>
+                <pre><code>&lt;p&gt;
+John Smith&lt;br&gt;
+Senior Reporter&lt;br&gt;
+Campus News Daily
+&lt;/p&gt;</code></pre>
+            </div>
+
+            <div class="info-box">
+                <strong>Note:</strong> <code>&lt;br&gt;</code> is a <strong>self-closing tag</strong> - it doesn't need a closing <code>&lt;/br&gt;</code>. You can also write it as <code>&lt;br /&gt;</code>.
+            </div>
+
+            <h3>Horizontal Lines</h3>
+            <p>Create a horizontal line to separate content with <code>&lt;hr&gt;</code>:</p>
+
+            <div class="code-box">
+                <div class="code-label">Horizontal Line</div>
+                <code>&lt;hr&gt;</code>
+            </div>
+
+            <h3>Special Characters</h3>
+            <p>Some characters have special meaning in HTML, so we use "character entities" to display them:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Character</th>
+                        <th>HTML Code</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&lt;</td>
+                        <td><code>&amp;lt;</code></td>
+                        <td>Less than</td>
+                    </tr>
+                    <tr>
+                        <td>&gt;</td>
+                        <td><code>&amp;gt;</code></td>
+                        <td>Greater than</td>
+                    </tr>
+                    <tr>
+                        <td>&amp;</td>
+                        <td><code>&amp;amp;</code></td>
+                        <td>Ampersand</td>
+                    </tr>
+                    <tr>
+                        <td>&quot;</td>
+                        <td><code>&amp;quot;</code></td>
+                        <td>Quotation mark</td>
+                    </tr>
+                    <tr>
+                        <td>&copy;</td>
+                        <td><code>&amp;copy;</code></td>
+                        <td>Copyright symbol</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td><code>&amp;nbsp;</code></td>
+                        <td>Non-breaking space</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Example: News Article with Links</h2>
+
+            <div class="try-it">
+                <h4>CREATE A MULTI-PAGE NEWS SITE</h4>
+                <p>Let's create two linked pages - a homepage and an article page.</p>
+
+                <p><span class="step-number">1</span><strong>Create index.html (Homepage)</strong></p>
+                <div class="code-box" style="margin-left: 40px;">
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Campus News Today&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Campus News Today&lt;/h1&gt;
+    &lt;hr&gt;
+
+    &lt;h2&gt;Top Stories&lt;/h2&gt;
+
+    &lt;h3&gt;&lt;a href="library-article.html"&gt;New Library Opens
+    Next Month&lt;/a&gt;&lt;/h3&gt;
+    &lt;p&gt;The long-awaited student library will finally open its
+    doors in October. &lt;a href="library-article.html"&gt;Read
+    more&lt;/a&gt;&lt;/p&gt;
+
+    &lt;h3&gt;Other Headlines&lt;/h3&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;Sports:&lt;/strong&gt; Basketball team
+        wins championship&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Campus Life:&lt;/strong&gt; New food
+        trucks arrive&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Academics:&lt;/strong&gt; Professor
+        wins national award&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;hr&gt;
+    &lt;p&gt;&lt;small&gt;&amp;copy; 2025 Campus News Today&lt;/small&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <p style="margin-top: 20px;"><span class="step-number">2</span><strong>Create library-article.html (Article Page)</strong></p>
+                <div class="code-box" style="margin-left: 40px;">
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;New Library Opens - Campus News Today&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p&gt;&lt;a href="index.html"&gt;&amp;lt; Back to Homepage&lt;/a&gt;&lt;/p&gt;
+
+    &lt;h1&gt;New Library Opens Next Month&lt;/h1&gt;
+    &lt;p&gt;&lt;em&gt;By Sarah Johnson | September 15, 2025&lt;/em&gt;&lt;/p&gt;
+    &lt;hr&gt;
+
+    &lt;p&gt;&lt;strong&gt;Students will soon have access to a
+    state-of-the-art library&lt;/strong&gt; featuring study spaces,
+    computer labs, and over 50,000 books.&lt;/p&gt;
+
+    &lt;h2&gt;What to Expect&lt;/h2&gt;
+    &lt;p&gt;The new facility includes:&lt;/p&gt;
+    &lt;ul&gt;
+        &lt;li&gt;24/7 study areas&lt;/li&gt;
+        &lt;li&gt;Silent reading rooms&lt;/li&gt;
+        &lt;li&gt;Group collaboration spaces&lt;/li&gt;
+        &lt;li&gt;Coffee shop on first floor&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;h2&gt;Opening Schedule&lt;/h2&gt;
+    &lt;ol&gt;
+        &lt;li&gt;&lt;strong&gt;October 1:&lt;/strong&gt; Soft opening
+        for faculty&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;October 7:&lt;/strong&gt; Grand
+        opening for students&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;October 14:&lt;/strong&gt; Community
+        open house&lt;/li&gt;
+    &lt;/ol&gt;
+
+    &lt;p&gt;For more information, visit the
+    &lt;a href="https://www.example.com" target="_blank"&gt;
+    university website&lt;/a&gt;.&lt;/p&gt;
+
+    &lt;hr&gt;
+    &lt;p&gt;&lt;a href="index.html"&gt;&amp;lt; Back to Homepage&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <p style="margin-top: 20px;"><span class="step-number">3</span><strong>Save Both Files</strong></p>
+                <ul style="margin-left: 40px;">
+                    <li>Save them in the <strong>same folder</strong></li>
+                    <li>Open <code>index.html</code> in your browser</li>
+                    <li>Click the links to navigate between pages!</li>
+                </ul>
+
+                <div class="success-box" style="margin-top: 15px;">
+                    <strong>Congratulations!</strong> You just created a multi-page website with navigation!
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Practice Exercise</h2>
+            <div class="try-it">
+                <h4>YOUR ASSIGNMENT</h4>
+                <p>Create a three-page website about your journalism program or school:</p>
+
+                <ol>
+                    <li><strong>index.html</strong> - Homepage with:
+                        <ul>
+                            <li>A main heading</li>
+                            <li>Links to your other two pages</li>
+                            <li>A bulleted list of at least 3 items</li>
+                        </ul>
+                    </li>
+                    <li><strong>about.html</strong> - About page with:
+                        <ul>
+                            <li>Information about the program</li>
+                            <li>At least one numbered list</li>
+                            <li>Bold and italic text</li>
+                            <li>A link back to homepage</li>
+                        </ul>
+                    </li>
+                    <li><strong>contact.html</strong> - Contact page with:
+                        <ul>
+                            <li>Contact information</li>
+                            <li>An email link using <code>mailto:</code></li>
+                            <li>A link back to homepage</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="warning-box">
+                    <strong>Important:</strong> All three files must be in the same folder for the links to work!
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Key Takeaways</h2>
+            <ul>
+                <li>Use <code>&lt;strong&gt;</code> for important text, <code>&lt;em&gt;</code> for emphasis</li>
+                <li><code>&lt;ul&gt;</code> creates bullet lists, <code>&lt;ol&gt;</code> creates numbered lists</li>
+                <li>Lists need <code>&lt;li&gt;</code> (list item) tags inside them</li>
+                <li>Links use <code>&lt;a href="destination"&gt;text&lt;/a&gt;</code></li>
+                <li>Use <code>target="_blank"</code> to open links in new tabs</li>
+                <li><code>&lt;br&gt;</code> creates line breaks, <code>&lt;hr&gt;</code> creates horizontal lines</li>
+                <li>Special characters use codes like <code>&amp;copy;</code> for &copy;</li>
+            </ul>
+
+            <div class="success-box">
+                <strong>Great Work!</strong> You now know how to format text and create navigation. Next, you'll learn to add images and multimedia to your pages!
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="lesson1.html" class="nav-button">← Previous: HTML Basics</a>
+            <a href="lesson3.html" class="nav-button">Next: Images & Multimedia →</a>
+        </div>
+    </div>
+</body>
+</html>

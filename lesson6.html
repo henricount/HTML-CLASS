@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 6: Build a Complete News Article Page</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+        header h1 { color: #667eea; margin-bottom: 10px; }
+        .lesson-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .content-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        .content-section h2 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .content-section h3 { color: #667eea; margin-top: 20px; margin-bottom: 10px; }
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .code-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            font-size: 13px;
+        }
+        .code-label {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .try-it {
+            background: #f0f0f0;
+            border: 2px dashed #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .try-it h4 { color: #667eea; margin-bottom: 10px; }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .nav-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        ul, ol { margin-left: 30px; margin-top: 10px; }
+        li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="lesson-number">LESSON 6 - FINAL PROJECT</span>
+            <h1>Build a Complete News Article Page</h1>
+            <p>Put everything together in a professional news article</p>
+        </header>
+
+        <div class="content-section">
+            <h2>Your Final Project</h2>
+            <p>Congratulations! You've learned HTML and CSS fundamentals. Now it's time to build a complete, professional news article page that includes everything you've learned.</p>
+
+            <h3>Project Requirements</h3>
+            <p>Your news article page must include:</p>
+            <ol>
+                <li><strong>Site Header</strong> with navigation menu</li>
+                <li><strong>Article headline, byline, and date</strong></li>
+                <li><strong>Lead/lede paragraph</strong> (styled differently)</li>
+                <li><strong>At least 4 paragraphs</strong> of article content</li>
+                <li><strong>At least one image</strong> with proper caption and credit</li>
+                <li><strong>A subheading</strong> (h2 or h3)</li>
+                <li><strong>A pull quote</strong></li>
+                <li><strong>A bulleted or numbered list</strong></li>
+                <li><strong>Related articles sidebar or section</strong></li>
+                <li><strong>Footer with copyright</strong></li>
+            </ol>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Template Code</h2>
+            <p>Here's a complete, professional news article template you can use and customize:</p>
+
+            <div class="code-box">
+                <div class="code-label">Complete Article Template</div>
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Article Title - Your News Site&lt;/title&gt;
+    &lt;style&gt;
+        /* ===== RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        /* ===== SITE HEADER ===== */
+        .site-header {
+            background: #1a1a1a;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .site-header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 0;
+        }
+
+        nav a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background: #333;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .article-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 50px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* ===== ARTICLE HEADER ===== */
+        .category {
+            color: #e74c3c;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .article-title {
+            font-size: 42px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .article-meta {
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 15px;
+        }
+
+        .byline {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* ===== ARTICLE CONTENT ===== */
+        .lead {
+            font-size: 20px;
+            line-height: 1.6;
+            font-weight: 500;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+
+        .article-content p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .article-content h2 {
+            font-size: 28px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .article-content h3 {
+            font-size: 22px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: #34495e;
+        }
+
+        /* ===== IMAGES ===== */
+        figure {
+            margin: 35px 0;
+        }
+
+        figure img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 3px;
+        }
+
+        figcaption {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        /* ===== PULL QUOTE ===== */
+        .pullquote {
+            font-size: 26px;
+            line-height: 1.4;
+            font-style: italic;
+            color: #e74c3c;
+            border-left: 5px solid #e74c3c;
+            padding-left: 25px;
+            margin: 35px 0 35px 40px;
+            max-width: 600px;
+        }
+
+        .pullquote cite {
+            display: block;
+            margin-top: 10px;
+            font-size: 16px;
+            font-style: normal;
+            color: #666;
+        }
+
+        /* ===== LISTS ===== */
+        .article-content ul,
+        .article-content ol {
+            margin: 20px 0 20px 40px;
+        }
+
+        .article-content li {
+            margin-bottom: 10px;
+        }
+
+        /* ===== RELATED ARTICLES ===== */
+        .related-articles {
+            background: #f8f9fa;
+            padding: 25px;
+            margin-top: 50px;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+        }
+
+        .related-articles h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .related-articles ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        .related-articles li {
+            margin-bottom: 12px;
+        }
+
+        .related-articles a {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .related-articles a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .article-title {
+                font-size: 32px;
+            }
+
+            .lead {
+                font-size: 18px;
+            }
+
+            .pullquote {
+                font-size: 20px;
+                margin-left: 0;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+            }
+
+            .site-header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- SITE HEADER --&gt;
+    &lt;header class="site-header"&gt;
+        &lt;div class="container"&gt;
+            &lt;a href="index.html" class="site-title"&gt;Campus News Daily&lt;/a&gt;
+            &lt;nav&gt;
+                &lt;ul&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;Home&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;News&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;Sports&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;Opinion&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#"&gt;About&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/nav&gt;
+        &lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;!-- ARTICLE --&gt;
+    &lt;article class="article-container"&gt;
+        &lt;div class="category"&gt;Campus News&lt;/div&gt;
+
+        &lt;h1 class="article-title"&gt;University Announces Major
+        Expansion of Campus Facilities&lt;/h1&gt;
+
+        &lt;div class="article-meta"&gt;
+            &lt;span class="byline"&gt;By Jordan Martinez&lt;/span&gt;
+            &lt;span&gt; | &lt;/span&gt;
+            &lt;time datetime="2025-10-15"&gt;October 15, 2025&lt;/time&gt;
+        &lt;/div&gt;
+
+        &lt;p class="lead"&gt;&lt;strong&gt;University officials unveiled plans
+        today for a $200 million expansion&lt;/strong&gt; that will add
+        three new buildings and renovate existing dormitories over
+        the next five years.&lt;/p&gt;
+
+        &lt;div class="article-content"&gt;
+            &lt;p&gt;The ambitious project, approved by the Board of
+            Trustees last month, represents the largest campus
+            development initiative in the university's 150-year
+            history. Construction is set to begin next spring.&lt;/p&gt;
+
+            &lt;figure&gt;
+                &lt;img src="https://images.unsplash.com/photo-1562774053-701939374585?w=800"
+                     alt="Modern university building exterior"&gt;
+                &lt;figcaption&gt;Artist rendering of the proposed Science
+                and Innovation Center. Image courtesy of University
+                Planning Office.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+
+            &lt;h2&gt;What's Being Built&lt;/h2&gt;
+
+            &lt;p&gt;The expansion includes three major components that
+            will transform the campus landscape and student experience:&lt;/p&gt;
+
+            &lt;ul&gt;
+                &lt;li&gt;&lt;strong&gt;Science and Innovation Center&lt;/strong&gt;
+                - A 150,000 square-foot facility with state-of-the-art
+                laboratories&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Student Commons Building&lt;/strong&gt; -
+                New dining options, study spaces, and recreation areas&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Dormitory Renovations&lt;/strong&gt; -
+                Complete upgrades to five existing residence halls&lt;/li&gt;
+            &lt;/ul&gt;
+
+            &lt;blockquote class="pullquote"&gt;
+                "This investment in our campus will benefit students
+                for generations to come."
+                &lt;cite&gt;— President Dr. Sarah Johnson&lt;/cite&gt;
+            &lt;/blockquote&gt;
+
+            &lt;h2&gt;Student Reaction&lt;/h2&gt;
+
+            &lt;p&gt;Current students have expressed enthusiasm about the
+            planned improvements, particularly the modernization of
+            aging dormitories and expansion of study spaces.&lt;/p&gt;
+
+            &lt;p&gt;"The current dorms are from the 1970s," said Maria
+            Chen, a junior majoring in biology. "These upgrades are
+            long overdue and will make campus life so much better."&lt;/p&gt;
+
+            &lt;h3&gt;Timeline and Funding&lt;/h3&gt;
+
+            &lt;p&gt;The project will be funded through a combination of
+            university reserves, alumni donations, and a modest increase
+            in student fees beginning in 2026. University officials
+            emphasize that financial aid will increase proportionally
+            to offset any fee increases for students receiving aid.&lt;/p&gt;
+
+            &lt;ol&gt;
+                &lt;li&gt;&lt;strong&gt;Phase 1 (2026-2027):&lt;/strong&gt; Science
+                and Innovation Center construction&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Phase 2 (2027-2028):&lt;/strong&gt; Student
+                Commons Building&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Phase 3 (2028-2030):&lt;/strong&gt; Rolling
+                dormitory renovations&lt;/li&gt;
+            &lt;/ol&gt;
+
+            &lt;p&gt;Campus administrators will hold town hall meetings
+            next month to gather student input on specific features
+            and amenities for the new buildings.&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;!-- RELATED ARTICLES --&gt;
+        &lt;aside class="related-articles"&gt;
+            &lt;h3&gt;Related Articles&lt;/h3&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;a href="#"&gt;Campus Master Plan: What Students
+                Need to Know&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;How Student Fees Are Calculated
+                and Spent&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;Photo Gallery: Historic Campus
+                Buildings Then and Now&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;Interview: Architect Shares
+                Vision for New Campus&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/aside&gt;
+    &lt;/article&gt;
+
+    &lt;!-- FOOTER --&gt;
+    &lt;footer&gt;
+        &lt;p&gt;&lt;strong&gt;Campus News Daily&lt;/strong&gt;&lt;/p&gt;
+        &lt;p&gt;Student Journalism Excellence Since 1950&lt;/p&gt;
+        &lt;p&gt;&amp;copy; 2025 Campus News Daily. All rights reserved.&lt;/p&gt;
+    &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>How to Use This Template</h2>
+
+            <div class="try-it">
+                <h4>STEP-BY-STEP INSTRUCTIONS</h4>
+
+                <ol>
+                    <li><strong>Copy the entire code above</strong> into your text editor</li>
+                    <li><strong>Save it as:</strong> <code>final-article.html</code></li>
+                    <li><strong>Customize the content:</strong>
+                        <ul>
+                            <li>Change the site name from "Campus News Daily"</li>
+                            <li>Write your own article headline</li>
+                            <li>Replace with your own article content</li>
+                            <li>Add your own byline and date</li>
+                            <li>Change the image (use Unsplash for free images)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Experiment with the CSS:</strong>
+                        <ul>
+                            <li>Try different colors</li>
+                            <li>Change fonts</li>
+                            <li>Adjust spacing and sizes</li>
+                        </ul>
+                    </li>
+                    <li><strong>Test in your browser</strong> and make adjustments</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Final Project Assignment</h2>
+
+            <div class="try-it">
+                <h4>CREATE YOUR OWN NEWS ARTICLE</h4>
+
+                <p><strong>Choose one of these topics or create your own:</strong></p>
+                <ul>
+                    <li>A major campus event or announcement</li>
+                    <li>A profile of an interesting person in your community</li>
+                    <li>An investigative piece on a local issue</li>
+                    <li>Coverage of a sports event or competition</li>
+                    <li>A feature story about a campus tradition or club</li>
+                </ul>
+
+                <p style="margin-top: 20px;"><strong>Your article must include:</strong></p>
+                <ol>
+                    <li>All structural elements (header, nav, article, footer)</li>
+                    <li>Proper HTML5 semantic tags</li>
+                    <li>Professional CSS styling</li>
+                    <li>At least one image with caption</li>
+                    <li>Responsive design (works on mobile)</li>
+                    <li>At least 300 words of original content</li>
+                    <li>Proper byline, dateline, and category</li>
+                    <li>Related articles section</li>
+                </ol>
+
+                <div class="success-box">
+                    <strong>Bonus Points:</strong> Add a second article page and link them together, create a homepage with multiple article links, or add social media sharing buttons!
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Evaluation Checklist</h2>
+
+            <p>Use this to check your work before submitting:</p>
+
+            <h3>HTML Structure</h3>
+            <ul>
+                <li>✓ Proper DOCTYPE declaration</li>
+                <li>✓ Complete head section with title</li>
+                <li>✓ Semantic HTML5 tags (header, nav, article, aside, footer)</li>
+                <li>✓ All tags properly closed</li>
+                <li>✓ Valid alt text on images</li>
+            </ul>
+
+            <h3>Content</h3>
+            <ul>
+                <li>✓ Clear, engaging headline</li>
+                <li>✓ Strong lead paragraph</li>
+                <li>✓ Well-organized body content</li>
+                <li>✓ Proper byline and date</li>
+                <li>✓ At least one subheading</li>
+                <li>✓ Image with proper caption and credit</li>
+            </ul>
+
+            <h3>CSS Styling</h3>
+            <ul>
+                <li>✓ Professional color scheme</li>
+                <li>✓ Readable typography</li>
+                <li>✓ Proper spacing and layout</li>
+                <li>✓ Consistent styling throughout</li>
+                <li>✓ Hover effects on links</li>
+                <li>✓ Responsive design (mobile-friendly)</li>
+            </ul>
+
+            <h3>Journalism Standards</h3>
+            <ul>
+                <li>✓ Accurate, well-researched information</li>
+                <li>✓ Proper attribution of sources</li>
+                <li>✓ Photo credits included</li>
+                <li>✓ Copyright notices where needed</li>
+                <li>✓ Professional tone and writing</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Congratulations!</h2>
+
+            <div class="success-box">
+                <h3 style="color: #28a745; margin-bottom: 15px;">You Did It!</h3>
+                <p>You've completed the Web Design for Online Journalism course! You now have the skills to:</p>
+                <ul style="margin-top: 15px;">
+                    <li>Build web pages from scratch using HTML</li>
+                    <li>Style them professionally with CSS</li>
+                    <li>Add images, videos, and multimedia</li>
+                    <li>Create responsive layouts that work on all devices</li>
+                    <li>Publish your journalism online</li>
+                </ul>
+
+                <p style="margin-top: 20px;"><strong>Next Steps:</strong></p>
+                <ul style="margin-top: 10px;">
+                    <li>Practice by building more pages</li>
+                    <li>Study professional news websites and try to recreate their designs</li>
+                    <li>Learn JavaScript to add interactivity</li>
+                    <li>Explore content management systems like WordPress</li>
+                    <li>Build a portfolio website to showcase your work</li>
+                </ul>
+
+                <p style="margin-top: 20px; font-size: 18px;"><strong>Keep learning, keep building, and keep telling important stories!</strong></p>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="lesson5.html" class="nav-button">← Previous: CSS Layout</a>
+            <a href="index.html" class="nav-button">Back to Course Home</a>
+        </div>
+    </div>
+</body>
+</html>

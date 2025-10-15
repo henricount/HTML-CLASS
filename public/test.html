@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .result {
+            background: white;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .error { background: #fee; color: #c33; }
+        .success { background: #efe; color: #3c3; }
+    </style>
+</head>
+<body>
+    <h1>🔧 API & Connection Test</h1>
+
+    <div class="test-section">
+        <h2>1. Server Connection Test</h2>
+        <button onclick="testServer()">Test Server</button>
+        <div id="server-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Database Connection Test</h2>
+        <button onclick="testDatabase()">Test Database</button>
+        <div id="db-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Registration Test</h2>
+        <form onsubmit="testRegister(event)">
+            <input type="text" id="test-name" placeholder="Full Name" value="Test User" required><br><br>
+            <input type="email" id="test-email" placeholder="Email" value="test@example.com" required><br><br>
+            <input type="password" id="test-password" placeholder="Password" value="Test123!" required><br><br>
+            <select id="test-role" required>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+            </select><br><br>
+            <button type="submit">Test Registration</button>
+        </form>
+        <div id="register-result" class="result"></div>
+    </div>
+
+    <script>
+        async function testServer() {
+            const result = document.getElementById('server-result');
+            result.textContent = 'Testing...';
+            result.className = 'result';
+
+            try {
+                const response = await fetch('/');
+                const html = await response.text();
+
+                if (response.ok) {
+                    result.className = 'result success';
+                    result.textContent = '✅ Server is running!\nStatus: ' + response.status;
+                } else {
+                    result.className = 'result error';
+                    result.textContent = '❌ Server error: ' + response.status;
+                }
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = '❌ Cannot connect to server:\n' + error.message;
+            }
+        }
+
+        async function testDatabase() {
+            const result = document.getElementById('db-result');
+            result.textContent = 'Testing database connection...';
+            result.className = 'result';
+
+            try {
+                // Try to fetch lessons (which requires DB connection)
+                const response = await fetch('/api/lessons');
+                const data = await response.json();
+
+                if (response.ok) {
+                    result.className = 'result success';
+                    result.textContent = '✅ Database connected!\nFound ' + (data.lessons?.length || 0) + ' lessons';
+                } else if (response.status === 401) {
+                    result.className = 'result success';
+                    result.textContent = '✅ Database connected!\n(Got 401 - expected, you need to login first)';
+                } else {
+                    result.className = 'result error';
+                    result.textContent = '❌ Database error:\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = '❌ Database connection failed:\n' + error.message;
+            }
+        }
+
+        async function testRegister(e) {
+            e.preventDefault();
+            const result = document.getElementById('register-result');
+            result.textContent = 'Testing registration...';
+            result.className = 'result';
+
+            const data = {
+                fullName: document.getElementById('test-name').value,
+                email: document.getElementById('test-email').value,
+                password: document.getElementById('test-password').value,
+                role: document.getElementById('test-role').value
+            };
+
+            console.log('Sending registration data:', data);
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const responseData = await response.json();
+                console.log('Response:', responseData);
+
+                if (response.ok) {
+                    result.className = 'result success';
+                    result.textContent = '✅ Registration successful!\n' + JSON.stringify(responseData, null, 2);
+                } else {
+                    result.className = 'result error';
+                    result.textContent = '❌ Registration failed:\n' + JSON.stringify(responseData, null, 2);
+                }
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = '❌ Request failed:\n' + error.message + '\n\nCheck browser console for details.';
+                console.error('Registration error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

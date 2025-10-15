@@ -207,4 +207,63 @@ router.get('/classes/:classId/stats', requireTeacher, async (req, res) => {
   }
 });
 
+// Get all students' progress (admin only)
+router.get('/all-students', requireTeacher, async (req, res) => {
+  try {
+    // Check if user is admin (specified emails)
+    const currentUser = await db.query('SELECT email FROM users WHERE id = $1', [req.session.userId]);
+    const adminEmails = ['henricount@digimethods.dev', 'henricount@gmail.com'];
+    
+    if (!adminEmails.includes(currentUser.rows[0]?.email.toLowerCase())) {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    const students = await db.query(
+      `SELECT 
+        u.id, u.full_name, u.email, u.created_at, u.last_login,
+        COALESCE(completed_lessons.count, 0) as lessons_completed,
+        COALESCE(completed_exercises.count, 0) as exercises_completed,
+        COALESCE(avg_score.score, 0) as average_score,
+        COALESCE(total_time.seconds, 0) as total_time_seconds,
+        CASE 
+          WHEN u.last_login > NOW() - INTERVAL '7 days' THEN 'active'
+          WHEN u.last_login > NOW() - INTERVAL '30 days' THEN 'inactive'
+          ELSE 'dormant'
+        END as activity_status
+      FROM users u
+      LEFT JOIN (
+        SELECT user_id, COUNT(*) 
+        FROM user_progress 
+        WHERE is_complete = TRUE 
+        GROUP BY user_id
+      ) completed_lessons ON u.id = completed_lessons.user_id
+      LEFT JOIN (
+        SELECT user_id, COUNT(DISTINCT exercise_id) 
+        FROM submissions 
+        WHERE is_complete = TRUE 
+        GROUP BY user_id
+      ) completed_exercises ON u.id = completed_exercises.user_id
+      LEFT JOIN (
+        SELECT user_id, AVG(score::float / max_score * 100) as score
+        FROM submissions 
+        WHERE score IS NOT NULL AND max_score > 0
+        GROUP BY user_id
+      ) avg_score ON u.id = avg_score.user_id
+      LEFT JOIN (
+        SELECT user_id, SUM(time_spent_seconds) as seconds
+        FROM user_progress 
+        GROUP BY user_id
+      ) total_time ON u.id = total_time.user_id
+      WHERE u.role = 'student'
+      ORDER BY u.created_at DESC`
+    );
+
+    res.json({ students: students.rows });
+
+  } catch (error) {
+    console.error('Get all students error:', error);
+    res.status(500).json({ error: 'Failed to get students data' });
+  }
+});
+
 module.exports = router;

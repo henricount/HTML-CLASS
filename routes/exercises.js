@@ -243,4 +243,64 @@ router.get('/:exerciseId/stats', requireAuth, async (req, res) => {
   }
 });
 
+// General submit route (for lesson page compatibility)
+router.post('/submit',
+  requireAuth,
+  [
+    body('exerciseId').isInt(),
+    body('code').isString().isLength({ max: 50000 }),
+    body('score').optional().isInt(),
+    body('maxScore').optional().isInt(),
+    body('isComplete').optional().isBoolean(),
+    body('feedback').optional()
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const { exerciseId, code, score, maxScore, isComplete, feedback } = req.body;
+      const userId = req.session.userId;
+
+      // Save submission
+      const submissionResult = await db.query(
+        `INSERT INTO submissions
+         (user_id, exercise_id, code, score, max_score, is_complete, feedback)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         RETURNING *`,
+        [
+          userId,
+          exerciseId,
+          code,
+          score || 0,
+          maxScore || 0,
+          isComplete || false,
+          JSON.stringify(feedback || {})
+        ]
+      );
+
+      // Get exercise to find lesson_id
+      const exerciseResult = await db.query(
+        'SELECT lesson_id FROM exercises WHERE id = $1',
+        [exerciseId]
+      );
+
+      if (exerciseResult.rows.length > 0 && isComplete) {
+        await checkAndUpdateProgress(userId, exerciseResult.rows[0].lesson_id);
+      }
+
+      res.json({
+        success: true,
+        submission: submissionResult.rows[0]
+      });
+
+    } catch (error) {
+      console.error('Submit exercise error:', error);
+      res.status(500).json({ error: 'Failed to submit exercise' });
+    }
+  }
+);
+
 module.exports = router;

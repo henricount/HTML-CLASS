@@ -38,7 +38,7 @@ temp/
 *.tmp
 
 # Old HTML files (moving to database-driven system)
-lesson*.html
+# lesson.html is now the main interface, so it's tracked
 index.html
 quick-reference.html
 exercises.html
