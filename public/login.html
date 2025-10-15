@@ -238,11 +238,6 @@
                     <div class="spinner"></div>
                 </button>
                 
-                <div class="divider">or</div>
-                
-                <button type="button" class="btn" id="forgot-password-btn" onclick="handleForgotPassword()" style="background: #6c757d;">
-                    Forgot Password?
-                </button>
             </form>
         </div>
 
@@ -418,36 +413,6 @@
                 btn.disabled = false;
             }
         }
-        
-        async function handleForgotPassword() {
-            const email = prompt('Enter your email address:');
-            if (!email) return;
-            
-            const btn = document.getElementById('forgot-password-btn');
-            btn.disabled = true;
-            btn.textContent = 'Sending...';
-            
-            try {
-                const response = await fetch('/api/auth/forgot-password', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-                
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error || 'Failed to send reset email');
-                }
-                
-                showSuccess(data.message);
-                
-            } catch (error) {
-                showError(error.message);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Forgot Password?';
-            }
         }
     </script>
 </body>

@@ -240,37 +240,6 @@
             opacity: 0.9;
         }
 
-        .achievements {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-        }
-
-        .achievement {
-            text-align: center;
-            padding: 20px;
-            border: 2px dashed #e0e0e0;
-            border-radius: 8px;
-            opacity: 0.5;
-        }
-
-        .achievement.earned {
-            opacity: 1;
-            border-style: solid;
-            border-color: #ffd700;
-            background: #fffef0;
-        }
-
-        .achievement-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .achievement-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-        }
 
         .loading {
             text-align: center;
@@ -342,15 +311,6 @@
             </div>
         </div>
 
-        <!-- Achievements -->
-        <div class="section">
-            <h2>🏆 Achievements</h2>
-            <div id="achievements-container" class="achievements">
-                <div class="loading">
-                    <p>Loading achievements...</p>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -405,9 +365,6 @@
                 const hours = Math.floor(data.stats.totalTimeSeconds / 3600);
                 const minutes = Math.floor((data.stats.totalTimeSeconds % 3600) / 60);
                 document.getElementById('time-spent').textContent = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
-
-                // Load achievements
-                loadAchievements(data.achievements);
             } catch (error) {
                 console.error('Failed to load progress:', error);
             }
@@ -466,36 +423,12 @@
                     <span>${Math.round(progress)}%</span>
                 </div>
                 <button class="start-btn" onclick="startLesson(${lesson.id})">
-                    ${isCompleted ? '📖 Review Lesson' : hasStarted ? '▶️ Continue' : '🚀 Start Lesson'}
+                    ${isCompleted ? 'Review Lesson' : hasStarted ? 'Continue' : 'Start Lesson'}
                 </button>
             `;
             return div;
         }
 
-        function loadAchievements(achievements) {
-            const container = document.getElementById('achievements-container');
-            container.innerHTML = '';
-
-            const icons = {
-                'First Steps': '🎯',
-                'Quick Learner': '⚡',
-                'Perfect Score': '💯',
-                'Code Master': '👨‍💻',
-                'HTML Expert': '📝',
-                'CSS Ninja': '🎨',
-                'Final Project': '🏆'
-            };
-
-            achievements.forEach(achievement => {
-                const div = document.createElement('div');
-                div.className = `achievement ${achievement.earned_at ? 'earned' : ''}`;
-                div.innerHTML = `
-                    <div class="achievement-icon">${icons[achievement.name] || '🏅'}</div>
-                    <div class="achievement-name">${achievement.name}</div>
-                `;
-                container.appendChild(div);
-            });
-        }
 
         function startLesson(lessonId) {
             // Go to new database-driven lesson page

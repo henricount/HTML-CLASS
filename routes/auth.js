@@ -192,50 +192,6 @@ router.post('/logout', (req, res) => {
   });
 });
 
-// Forgot password request
-router.post('/forgot-password',
-  [
-    body('email').isEmail().normalizeEmail()
-  ],
-  async (req, res) => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-
-      const { email } = req.body;
-
-      // Check if user exists
-      const result = await db.query(
-        'SELECT id, email FROM users WHERE email = $1',
-        [email]
-      );
-
-      // Always return success to prevent email enumeration
-      res.json({ 
-        success: true, 
-        message: 'If an account with that email exists, a reset link has been sent.' 
-      });
-
-      // Only actually process if user exists
-      if (result.rows.length > 0) {
-        // In a real app, you would:
-        // 1. Generate a secure reset token
-        // 2. Store it in database with expiration
-        // 3. Send email with reset link
-        console.log(`Password reset requested for: ${email}`);
-        
-        // For demo purposes, we'll just log it
-        // TODO: Implement actual email sending with reset token
-      }
-
-    } catch (error) {
-      console.error('Forgot password error:', error);
-      res.status(500).json({ error: 'Password reset failed' });
-    }
-  }
-);
 
 // Get current user
 router.get('/me', async (req, res) => {
